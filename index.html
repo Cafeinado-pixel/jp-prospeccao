@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prospecção JP Alumínios</title>
+<meta name="theme-color" content="#0f4c5c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JP Prospecção">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+
+<style>
+:root{
+  --bg:#f4f3f0; --card:#ffffff; --ink:#1d2327; --muted:#667078; --line:#e0ddd6;
+  --brand:#0f4c5c; --brand-ink:#ffffff; --accent:#e36414; --ok:#2e7d4f; --warn:#b7791f; --bad:#b23a3a;
+  --chip:#ebe9e3; --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#14181b; --card:#1d2327; --ink:#eceae5; --muted:#9aa4ab; --line:#2f373c;
+    --brand:#5fb3c6; --brand-ink:#0d1a1f; --accent:#ff8a3d; --ok:#5ec58a; --warn:#e3b04b; --bad:#ec7f7f;
+    --chip:#272f34; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14181b; --card:#1d2327; --ink:#eceae5; --muted:#9aa4ab; --line:#2f373c;
+  --brand:#5fb3c6; --brand-ink:#0d1a1f; --accent:#ff8a3d; --ok:#5ec58a; --warn:#e3b04b; --bad:#ec7f7f;
+  --chip:#272f34; --shadow:none;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--brand)}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px 80px}
+header.top{background:var(--brand);color:var(--brand-ink);padding:22px 0 18px}
+header.top .wrap{padding-bottom:0}
+.top h1{margin:0;font-size:22px;letter-spacing:.2px}
+.top p{margin:4px 0 0;opacity:.85;font-size:13.5px}
+.top .row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--card);padding:8px 12px;border-radius:9px;cursor:pointer;font-weight:600;font-size:13.5px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;color:var(--ink)}
+.btn:hover{border-color:var(--brand)}
+.btn.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.btn.wa{background:#1fa855;border-color:#1fa855;color:#fff}
+.btn.ghost{background:transparent}
+.top .btn{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:var(--brand-ink)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:16px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:24px;line-height:1.1}
+.stat span{color:var(--muted);font-size:12.5px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);margin-bottom:14px}
+.filters{display:grid;gap:10px}
+.frow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.frow input[type=search],.frow select{padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);min-width:0}
+.frow input[type=search]{flex:1 1 220px}
+.chip{border:1px solid var(--line);background:var(--chip);padding:6px 12px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:600;user-select:none}
+.chip[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.count{color:var(--muted);font-size:13px;margin:4px 2px 10px}
+.list{display:grid;gap:10px}
+.lead{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+.lead.done{opacity:.72}
+.lead h3{margin:0 0 4px;font-size:16px;line-height:1.3}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.tag{font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--muted);font-weight:600}
+.tag.pa{background:var(--accent);color:#fff}
+.tag.pb{background:var(--warn);color:#fff}
+.tag.pc{background:var(--muted);color:#fff}
+.tag.dem{background:var(--bad);color:#fff}
+.tag.low{border:1px dashed var(--muted)}
+.lead .why{margin:6px 0;color:var(--ink)}
+.lead .why small{color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.actions select{padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:var(--bg)}
+details{margin-top:8px}
+summary{cursor:pointer;color:var(--brand);font-weight:600;font-size:13.5px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:4px 10px;margin-top:8px;font-size:13.5px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;word-break:break-word}
+textarea.note{width:100%;min-height:56px;margin-top:8px;padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--bg);resize:vertical}
+.empty{text-align:center;color:var(--muted);padding:40px 10px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:50}
+.modal.open{display:flex}
+.sheet{background:var(--card);width:100%;max-width:640px;border-radius:18px 18px 0 0;padding:18px;max-height:92vh;overflow:auto}
+@media(min-width:700px){.modal{align-items:center}.sheet{border-radius:18px}}
+.sheet h2{margin:0 0 4px;font-size:18px}
+.sheet textarea{width:100%;min-height:210px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);margin:10px 0}
+.hint{color:var(--muted);font-size:12.5px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:13.5px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:60}
+.toast.show{opacity:1}
+.pitch{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:8px}
+.pitch div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:13px}
+.pitch b{display:block;font-size:13px;margin-bottom:2px}
+@media(max-width:520px){.kv{grid-template-columns:1fr}.kv dt{margin-top:6px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <h1>Prospecção JP Alumínios</h1>
+        <p>Vidros e esquadrias de alumínio · Ribeirão Preto e região · base de pesquisa de 13/10/2026</p>
+      </div>
+      <div class="frow">
+        <button class="btn" id="btnTheme" type="button">Tema</button>
+        <button class="btn" id="btnCsv" type="button">Exportar CSV</button>
+        <button class="btn" id="btnBackup" type="button">Backup</button>
+        <button class="btn" id="btnRestore" type="button">Restaurar</button>
+        <input type="file" id="fileRestore" accept="application/json" hidden>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="stats" id="stats"></section>
+
+  <section class="panel">
+    <details>
+      <summary>Argumentos de venda da JP Alumínios (do catálogo)</summary>
+      <div class="pitch">
+        <div><b>Desde 2015</b>Relacionamentos sólidos e confiáveis, projetos residenciais, comerciais e industriais.</div>
+        <div><b>Soluções completas</b>Caixilharia de alumínio, pele de vidro, escadas, corrimãos e guarda-corpo, box, espelhos, coberturas e pergolados.</div>
+        <div><b>Equipe treinada</b>Soluções personalizadas, qualidade da escolha dos materiais até a instalação final.</div>
+        <div><b>Custo benefício</b>Orçamento otimizado, segurança e conforto em projetos de arquitetura.</div>
+      </div>
+      <p class="hint">Contato comercial. Paulo Roberto Fonseca, (16) 98816-3513, Av. Eduardo Andréia Matarazzo, 703, Central Park, Ribeirão Preto.</p>
+    </details>
+  </section>
+
+  <section class="panel filters">
+    <div class="frow">
+      <input type="search" id="q" placeholder="Buscar por nome, bairro, responsável, serviço...">
+      <select id="fCat"></select>
+      <select id="fCity"></select>
+      <select id="fStatus"></select>
+      <select id="fSort">
+        <option value="prio">Ordenar por prioridade e pontuação</option>
+        <option value="pts">Ordenar por pontuação</option>
+        <option value="dist">Ordenar por distância</option>
+        <option value="nome">Ordenar por nome</option>
+      </select>
+    </div>
+    <div class="frow">
+      <span class="chip" role="button" tabindex="0" aria-pressed="false" data-prio="A">Prioridade A</span>
+      <span class="chip" role="button" tabindex="0" aria-pressed="false" data-prio="B">Prioridade B</span>
+      <span class="chip" role="button" tabindex="0" aria-pressed="false" data-prio="C">Prioridade C</span>
+      <span class="chip" role="button" tabindex="0" aria-pressed="false" id="cDem">Demanda imediata</span>
+      <span class="chip" role="button" tabindex="0" aria-pressed="false" id="cCont">Com telefone ou WhatsApp</span>
+      <span class="chip" role="button" tabindex="0" aria-pressed="false" id="cHide">Ocultar finalizados</span>
+      <button class="btn ghost" id="btnClear" type="button">Limpar filtros</button>
+    </div>
+  </section>
+
+  <div class="count" id="count"></div>
+  <section class="list" id="list"></section>
+  <p class="hint">Os dados vêm de fontes públicas. A confiança varia por lead e vários contatos estão marcados como não confirmados, então confirme o número antes de abordar. Status e anotações ficam salvos neste navegador, use Backup para guardar uma cópia.</p>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="sheet">
+    <h2 id="mTitle">Mensagem de abordagem</h2>
+    <div class="hint" id="mSub"></div>
+    <textarea id="mText"></textarea>
+    <div class="frow">
+      <a class="btn wa" id="mWa" target="_blank" rel="noopener">Abrir no WhatsApp</a>
+      <button class="btn" id="mCopy" type="button">Copiar texto</button>
+      <button class="btn" id="mMail" type="button">E-mail</button>
+      <button class="btn primary" id="mMark" type="button">Marcar como abordado</button>
+      <button class="btn ghost" id="mClose" type="button">Fechar</button>
+    </div>
+    <p class="hint">Edite o texto à vontade antes de enviar. Ao marcar como abordado a data de hoje fica registrada.</p>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const LEADS = ([{"id":"L001","nome":"Bild Desenvolvimento Imobiliário (Grupo Bild)","cat":"A - Construção Civil","seg":"Construtora/Incorporadora","cidade":"Ribeirão Preto","dist":"0","end":"Av. Prof. João Fiúsa, 2.200; atendimento no Shopping Iguatemi, Av. Luiz Eduardo Toledo Prado, 900","site":"bild.com.br (não confirmado por acesso direto)","resp":"João Carlos Moreira Filho","cargo":"Parceiro regional em Ribeirão Preto","fonte":"jornaldobras.com.br (not. 111871, 113052)","indicio":"Lançou 'Über Renoir' (Über Parque Sul); +25 obras ativas em 15 cidades; Ellum Tower 100% vendida em 3 meses; 11ª maior construtora do Brasil (ranking INTEC 2026)","servico":"Esquadrias de alumínio, vidros, guarda-corpos e coberturas para empreendimentos em obra","justif":"Construtora de grande porte com múltiplas obras ativas simultâneas em RP, alto volume potencial","recorr":"Alto","prio":"A","pts":"85","conf":"Média","prox":"Buscar WhatsApp via site/Instagram e enviar mensagem inicial","obs":"Site institucional citado por fonte terceira, não acessado diretamente","dem":true},{"id":"L002","nome":"Vitta Residencial (marca do Grupo Bild)","cat":"A - Construção Civil","seg":"Construtora (habitação popular)","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim José Figueira","site":"vittaresidencial.com.br (não confirmado)","fonte":"jornaldobras.com.br (not. 106895)","indicio":"'Vitta Recanto das Amoras' em construção, entrega 12/2027; +5.000 unidades construídas em 2025 (SP/MG/PR)","servico":"Esquadrias de alumínio e vidros para unidades em construção","justif":"Obra confirmada em andamento com entrega datada","recorr":"Alto","prio":"A","pts":"80","conf":"Média","prox":"Buscar WhatsApp via site/Instagram e enviar mensagem inicial","dem":true},{"id":"L003","nome":"Pereira Alvim Incorporadora e Construtora Ltda","cat":"A - Construção Civil","seg":"Construtora/Incorporadora","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Canadá","end":"Av. Prof. João Fiúsa, 2777, Jardim Canadá, CEP 14.024-250","tel":"(16) ****-5151 (parcial)","email":"con*****@pereiraalvim.com.br (parcial)","fonte":"monitorcnpj.com.br/cnpj/05646862000100; grandesnomesdapropaganda.com.br","indicio":"Lançamento 'Residencial Quinta da Mata' (06/2026); campanha do 'Residencial Alto do Castelo' com ator Carlos Casagrande","servico":"Esquadrias de alumínio, vidros e guarda-corpos","justif":"Lançamento recente confirmado com campanha publicitária ativa","recorr":"Alto","prio":"A","pts":"78","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial","obs":"Telefone e e-mail parcialmente mascarados em agregador de CNPJ","dem":true},{"id":"L004","nome":"Brio Incorporadora Ltda","cat":"A - Construção Civil","seg":"Incorporadora","cidade":"Ribeirão Preto","dist":"0","site":"brioincorporadora.com.br (não confirmado)","resp":"Fabio Villas Bôas","cargo":"Sócio Proprietário","fonte":"griinstitute.org; br.indeed.com/cmp/Brio-Incorporadora","indicio":"+6.200 unidades entregues em mais de uma década; 'Lar Valência' (lançamento 01/2025); vaga de Consultor de Vendas aberta em RP","servico":"Esquadrias de alumínio e vidros","justif":"Vaga comercial aberta sugere operação ativa na cidade","recorr":"Alto","prio":"B","pts":"60","conf":"Baixa/Média","prox":"Buscar WhatsApp via site/Instagram e enviar mensagem inicial","dem":true},{"id":"L005","nome":"Habiarte (Habiarte Barc Construtores / Incorporação e Construção)","cat":"A - Construção Civil","seg":"Construtora/Incorporadora","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Canadá","end":"Rua Galileu Galilei, 1800, sala 1003 (endereço de processo judicial, pode estar desatualizado)","fonte":"vlex.com.br/vid/acao-civil-publica-ptm-559898242 (CNPJ 54.635.552/0001-03)","indicio":"Lançamento 'Cidade de Milão' citado (~05/2025, via agregador)","servico":"Esquadrias de alumínio e vidros","justif":"Lançamento mencionado mas pouco confirmado","recorr":"Médio","prio":"B","pts":"50","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L006","nome":"Pafil Empreendimentos","cat":"A - Construção Civil","seg":"Incorporadora","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Botânico","fonte":"apto.vc/empresas/pafil-empreendimentos","indicio":"Lançamento 'Arboretto' (10/2023, dado antigo); 'Tríade Fiúsa' também listado","servico":"Esquadrias de alumínio e vidros","justif":"Demanda referente a lançamento antigo, sem confirmação de obra atual","recorr":"Médio","prio":"C","pts":"35","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L007","nome":"Urben","cat":"A - Construção Civil","seg":"Incorporadora","cidade":"Ribeirão Preto","dist":"0","bairro":"Campos Elíseos / Jd. Nova Aliança / Panamby / Sumarezinho","fonte":"apto.vc/empresas/urben","indicio":"'Alma Panamby' (lançamento 01/2026, Rua Hugo Brandani, entrega 12/2030, a partir de R$378.690); Urben Ametist, Ventis, UP 1600 Ipiranga","servico":"Esquadrias de alumínio, vidros e guarda-corpos","justif":"Lançamento recente confirmado com entrega datada","recorr":"Alto","prio":"A","pts":"75","conf":"Baixa/Média","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L008","nome":"Casa Alea","cat":"A - Construção Civil","seg":"Incorporadora","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Helena","fonte":"apto.vc/empresas/casa-alea","indicio":"'Ribeirão Preto II' (02/2026) e 'Casapátio Ribeirão Preto II' (01/2026), entrega 12/2030","servico":"Esquadrias de alumínio e vidros","justif":"Dois lançamentos recentes confirmados","recorr":"Alto","prio":"A","pts":"72","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L009","nome":"Construtora Pagano","cat":"A - Construção Civil","seg":"Construtora","cidade":"Ribeirão Preto","dist":"0","end":"Av. Independência, 928, Centro","fonte":"guiatelefone.com; apto.vc","indicio":"Lançamento 'Village Park' (01/2026)","servico":"Esquadrias de alumínio e vidros","justif":"Lançamento recente confirmado","recorr":"Médio","prio":"B","pts":"65","conf":"Baixa/Média","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L010","nome":"Projeto 9 Construtora e Incorporadora","cat":"A - Construção Civil","seg":"Construtora/Incorporadora","cidade":"Ribeirão Preto","dist":"0","bairro":"Vila do Golf","fonte":"apto.vc/empresas/projeto-9-construtora-e-incorporadora","indicio":"'Edifício Atmosfera' lançado em 01/2022 (dado antigo)","servico":"Esquadrias de alumínio e vidros","justif":"Sem evidência de obra atual confirmada","recorr":"Médio","prio":"C","pts":"35","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L011","nome":"TAP Construtora","cat":"A - Construção Civil","seg":"Construtora","cidade":"Ribeirão Preto","dist":"0","bairro":"Zona Sul","fonte":"apto.vc/empresas/tap-construtora","indicio":"Condomínio fechado de casas na Zona Sul (anúncio); vaga de engenheiro de obras aberta","servico":"Esquadrias de alumínio e vidros","justif":"Vaga de obras aberta sugere obra ativa","recorr":"Médio","prio":"B","pts":"55","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L012","nome":"LPC","cat":"A - Construção Civil","seg":"Construtora","cidade":"Ribeirão Preto","dist":"0","bairro":"Alto do Ipiranga","fonte":"apto.vc/empresas/lpc","indicio":"'Quintas Botânico' (lançamento 01/2021, dado antigo)","servico":"Esquadrias de alumínio e vidros","justif":"Lançamento antigo, sem evidência de obra atual","recorr":"Médio","prio":"C","pts":"35","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L013","nome":"Pedreschi Construtora","cat":"A - Construção Civil","seg":"Construtora","cidade":"Ribeirão Preto / Bonfim Paulista","dist":"10","fonte":"apto.vc/empresas/pedreschi-construtora","indicio":"'Terra de Gaia' (07/2026); 'Wine Residence' (Alto da Boa Vista), 'Blend Oscar Freire', 'Blend Coliving', 'Sevilha' — 3 de 5 imóveis listados ficam em Bonfim Paulista","servico":"Esquadrias de alumínio, vidros e guarda-corpos","justif":"Múltiplos lançamentos ativos, incluindo Bonfim Paulista","recorr":"Alto","prio":"A","pts":"75","conf":"Baixa/Média","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L014","nome":"Stéfani Nogueira (Urbanização, Incorporação e Construção Ltda)","cat":"A - Construção Civil","seg":"Construtora/Loteadora","cidade":"Ribeirão Preto / Bonfim Paulista","dist":"10","fonte":"empresaqui.com.br (CNPJ 13.727.569/0001-03); apto.vc","indicio":"'Sky Redentora' (03/2026); loteamento 'Alto do Belvedere' em Bonfim Paulista (01/2026); 'Belvedere Laranjeiras' em construção, entrega 10/2026 (vínculo não 100% confirmado)","servico":"Esquadrias de alumínio, vidros e guarda-corpos","justif":"Loteamento em construção confirmado em Bonfim Paulista","recorr":"Alto","prio":"A","pts":"73","conf":"Baixa/Média","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L015","nome":"Construtora Stefani (30 anos, loteamentos)","cat":"A - Construção Civil","seg":"Construtora/Loteadora","cidade":"Ribeirão Preto","dist":"0","site":"construtorastefani.com.br (não confirmado)","resp":"Nilo De Stefani","cargo":"Sócio Diretor (divisão de loteamentos)","fonte":"griinstitute.org","indicio":"Atuação de 30 anos em bairros planejados/loteamentos; nenhum lançamento datado confirmado nesta pesquisa","servico":"Esquadrias de alumínio e vidros","justif":"Perfil adequado, sem demanda específica confirmada","recorr":"Alto","prio":"B","pts":"50","conf":"Baixa","prox":"Buscar WhatsApp via site/Instagram e enviar mensagem inicial","dem":true},{"id":"L016","nome":"Urba (marca de loteamentos, grupo MRV&CO)","cat":"A - Construção Civil","seg":"Loteadora","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim das Palmeiras","fonte":"apto.vc/empresas/urba; diariodocomercio.com.br","indicio":"Loteamento fechado 'Smart Urba Ribeirão I' (01/2026), entrega 12/2029, lotes de 160-225m²","servico":"Esquadrias de alumínio, vidros e guarda-corpos","justif":"Loteamento recente confirmado","recorr":"Alto","prio":"A","pts":"72","conf":"Baixa/Média","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L017","nome":"Plaenge","cat":"A - Construção Civil","seg":"Construtora","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Sumaré","fonte":"apto.vc; olx.com.br","indicio":"Lançamento 'Cerqueira 2164' (06/2026), 42-58m², entrega 12/2030","servico":"Esquadrias de alumínio e vidros","justif":"Lançamento recente confirmado, construtora de grande porte","recorr":"Alto","prio":"A","pts":"70","conf":"Baixa/Média","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L018","nome":"Marco Ferrandini Arquiteto","cat":"B - Arquitetura e Engenharia","seg":"Arquiteto autônomo","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Zara","end":"Rua Ana Amado, 221, Jardim Zara, CEP 14092-330","tel":"(16) 99720-5... (parcial, oculto na página)","resp":"Marco Ferrandini","cargo":"Arquiteto","fonte":"applocal.com.br/empresa/marco-ferrandini-arquiteto/ribeirao-preto/sp/13370288","servico":"Parceria de indicação em projetos residenciais","justif":"Perfil adequado para indicar vidros/esquadrias em projetos","recorr":"Alto","prio":"B","pts":"55","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L019","nome":"Paola Laguna Arquitetura","cat":"B - Arquitetura e Engenharia","seg":"Escritório de arquitetura","cidade":"Ribeirão Preto","dist":"0","end":"Av. Presidente Vargas, Subsetor Sul 2, CEP 14025-700","resp":"Paola Laguna","cargo":"Arquiteta","fonte":"applocal.com.br/empresa/paola-laguna-arquitetura/ribeirao-preto/sp/12173161","servico":"Parceria de indicação em projetos residenciais/comerciais","justif":"Perfil adequado sem demanda específica confirmada","recorr":"Alto","prio":"B","pts":"45","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L020","nome":"Vítor Pezarezi Arquitetura e Design","cat":"B - Arquitetura e Engenharia","seg":"Arquiteto/urbanista","cidade":"Ribeirão Preto","dist":"0","resp":"Vítor Pezarezi","fonte":"cronoshare.com.br/croner-3464361-vitor-pezarezi-arquitetura-e-design","servico":"Parceria de indicação (residencial, comercial, institucional)","justif":"Perfil adequado, atua em múltiplos segmentos","recorr":"Alto","prio":"B","pts":"45","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L021","nome":"Igor Cossalter Arquitetura + Design","cat":"B - Arquitetura e Engenharia","seg":"Arquiteto","cidade":"Ribeirão Preto","dist":"0","resp":"Igor Cossalter","fonte":"archtrends.com/perfil/igor-cossalter","servico":"Parceria de indicação (famílias, investidores, construtoras)","justif":"Perfil autodeclarado atua com construtoras, bom multiplicador","recorr":"Alto","prio":"B","pts":"48","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L022","nome":"Estúdio Cidade","cat":"B - Arquitetura e Engenharia","seg":"Escritório de arquitetura (alto padrão)","cidade":"Ribeirão Preto","dist":"0","resp":"Maísa Deghaidi Jordão","cargo":"Fundadora/sócia","fonte":"archdaily.com/1055229/siena-house-estudio-cidade; archinect.com/maisajordao","indicio":"Projetos publicados: Casa Siena (~400m², alto padrão), Casa T.A., interiores, comércio, indústria, escritório para base de combustível","servico":"Parceria de indicação em casas de alto padrão e projetos comerciais/industriais","justif":"Projetos publicados e verificáveis em casas de alto padrão, forte adequação","recorr":"Alto","prio":"A","pts":"72","conf":"Alta","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L023","nome":"G Landi Arquitetura","cat":"B - Arquitetura e Engenharia","seg":"Arquitetura","cidade":"Ribeirão Preto","dist":"0","fonte":"citada em applocal.com.br (listagem de arquitetos de RP)","servico":"Parceria de indicação","justif":"Apenas citação em diretório, sem dados próprios","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L024","nome":"Startarq","cat":"B - Arquitetura e Engenharia","seg":"Arquitetura","cidade":"Ribeirão Preto","dist":"0","fonte":"citada em applocal.com.br (listagem de arquitetos de RP)","servico":"Parceria de indicação","justif":"Apenas citação em diretório, sem dados próprios","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L025","nome":"Adriana Colucci Arquitetura e Design","cat":"B - Arquitetura e Engenharia","seg":"Arquiteta (lojas comerciais)","cidade":"Ribeirão Preto","dist":"0","resp":"Adriana Colucci","cargo":"Arquiteta (~25 anos de atuação)","fonte":"blog.ipog.edu.br/?p=8627","indicio":"Projetou loja 'Le Jardin' no Ribeirão Shopping; atua em residências e apartamentos","servico":"Parceria de indicação em projetos comerciais/residenciais","justif":"Experiência comprovada em projetos de lojas comerciais, que exigem vitrines/fachadas","recorr":"Alto","prio":"B","pts":"55","conf":"Média","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L026","nome":"PL Projetos e Laudos","cat":"B - Arquitetura e Engenharia","seg":"Assessoria de arquitetura/laudos","cidade":"Ribeirão Preto","dist":"0","bairro":"Parque Industrial Lagoinha","fonte":"ohub.com.br/empresa/pl-projetos-e-laudos-ribeirao-preto-sp-387668","indicio":"Atua em arquitetura de instalações comerciais, vistorias e laudos","servico":"Parceria de indicação em instalações comerciais","justif":"Segmento de instalações comerciais tem alta adequação","recorr":"Médio","prio":"B","pts":"48","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L027","nome":"Engeale Serviços de Engenharia","cat":"B - Arquitetura e Engenharia","seg":"Engenharia (fiscalização de obras)","cidade":"Ribeirão Preto","dist":"0","end":"Av. Independência, 3320, Alto da Boa Vista, CEP 14025-230","fonte":"ohub.com.br/empresa/engeale-servicos-de-engenharia-ribeirao-preto-sp-642045","indicio":"Atua em construção/reforma, fiscalização e gerenciamento de obras, inspeção predial","servico":"Parceria de indicação (acompanha obras de terceiros)","justif":"Fiscaliza obras de terceiros, bom canal de indicação","recorr":"Médio","prio":"B","pts":"50","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L028","nome":"Construarch Arquitetura e Engenharia Ltda","cat":"B - Arquitetura e Engenharia","seg":"Arquitetura + Engenharia","cidade":"Ribeirão Preto","dist":"0","bairro":"Campos Elíseos","end":"Av. Meira Junior, 549, sala 03, CEP 14085-230 (CNPJ 10.426.727/0001-99)","fonte":"solutudo.com.br/empresas/sp/ribeirao-preto/engenharia-engenheiros/construarch-arquitetura-e-engenharia-ltda-548402","servico":"Parceria de indicação","justif":"Combina arquitetura e engenharia, perfil adequado","recorr":"Médio","prio":"B","pts":"45","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L029","nome":"Liberatori e Aguiar Serviços de Engenharia Ltda","cat":"B - Arquitetura e Engenharia","seg":"Engenharia","cidade":"Ribeirão Preto","dist":"0","fonte":"solutudo.com.br/empresas/sp/ribeirao-preto/engenharia-engenheiros/liberatori-e-aguiar-servicos-de-engenharia-ltda-538593","servico":"Parceria de indicação","justif":"Dados muito limitados","recorr":"Médio","prio":"C","pts":"35","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L030","nome":"Integrada Projetos e Engenharia Ltda","cat":"B - Arquitetura e Engenharia","seg":"Engenharia","cidade":"Ribeirão Preto","dist":"0","fonte":"solutudo.com.br/empresas/sp/ribeirao-preto/engenharia-engenheiros/integrada-projetos-e-engenharia-ltda-541134","servico":"Parceria de indicação","justif":"Dados muito limitados","recorr":"Médio","prio":"C","pts":"35","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L031","nome":"Isabella A Gomes Engenharia e Serviços","cat":"B - Arquitetura e Engenharia","seg":"Engenharia","cidade":"Ribeirão Preto","dist":"0","resp":"Isabella A. Gomes","fonte":"solutudo.com.br/empresas/sp/ribeirao-preto/engenharia-engenheiros/isabella-a-gomes-engenharia-e-servicos-25754533","servico":"Parceria de indicação","justif":"Dados muito limitados","recorr":"Médio","prio":"C","pts":"35","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L032","nome":"Engeplan Consultoria e Gerenciamento Ltda","cat":"B - Arquitetura e Engenharia","seg":"Consultoria/gerenciamento de obras","cidade":"Ribeirão Preto","dist":"0","fonte":"solutudo.com.br/empresas/sp/ribeirao-preto/engenharia-engenheiros/engeplan-consultoria-e-gerenciamento-ltda-599814","servico":"Parceria de indicação (gerencia obras de terceiros)","justif":"Gerencia obras, bom canal de indicação em tese","recorr":"Médio","prio":"C","pts":"38","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L033","nome":"Wallace Oliveira (arquiteto, CASACOR Ribeirão Preto 2025)","cat":"B - Arquitetura e Engenharia","seg":"Arquiteto (mostra de decoração)","cidade":"Ribeirão Preto","dist":"0","resp":"Wallace Oliveira","fonte":"jornaldobras.com.br/noticia/88000/cores-assumem-protagonismo-na-casacor-ribeirao-preto-2025","indicio":"Autor do ambiente 'Varanda Refúgio' na CASACOR RP 2025, com luz cênica","servico":"Parceria de indicação em fechamento de varanda/pergolado","justif":"Ambiente de varanda projetado alinha-se diretamente ao serviço, mas sem contato encontrado","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","obs":"Nenhum dado de contato encontrado; cidade-base não confirmada","dem":true},{"id":"L034","nome":"Joel Pereira, Marina Moro e Viviane Cantarino (CASACOR RP 2025)","cat":"B - Arquitetura e Engenharia","seg":"Arquitetos (mostra de decoração)","cidade":"Ribeirão Preto","dist":"0","fonte":"jornaldobras.com.br/noticia/88000/cores-assumem-protagonismo-na-casacor-ribeirao-preto-2025","indicio":"Autores do 'Espaço Reconecta', ambiente integrado/alto padrão exibido em mostra regional","servico":"Parceria de indicação em projetos de alto padrão","justif":"Projeto de alto padrão documentado, mas sem contato encontrado","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","obs":"Nenhum dado de contato encontrado","dem":true},{"id":"L035","nome":"MDL Administração e Gestão de Bens Ltda.","cat":"D - Condomínios","seg":"Administradora de condomínios","cidade":"Ribeirão Preto","dist":"0","bairro":"Quinta da Primavera","end":"Rua José Miguel Dib, 210, Quadra 08, Lote 08, CEP 14022-092","tel":"(16) 99202-6145","wa":"(16) 99202-6145","fonte":"solutudo.com.br/empresas/sp/ribeirao-preto/administradoras-de-condominios/mdl-administracao-e-gestao-de-bens-limitada-25066991","servico":"Guarda-corpo/corrimão, vidros e portas em áreas comuns","justif":"Administradora com telefone confirmado, perfil recorrente de manutenção predial","recorr":"Alto","prio":"B","pts":"55","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L036","nome":"Caetano e Santos Administração de Condomínios","cat":"D - Condomínios","seg":"Administradora de condomínios","cidade":"Ribeirão Preto","dist":"0","bairro":"Centro","end":"Rua Comandante Marcondes Salgado, Centro, CEP 14010-150 (divergência: outra fonte cita Rua Carlos Rateb Cury)","tel":"(16) 3234-0564","fonte":"guiatelefone.com/empresas/ribeirao-preto-sp/administracao-financeira/administracao-de-condominios","servico":"Guarda-corpo/corrimão, cobertura de área comum, vidros","justif":"Administradora com telefone confirmado","recorr":"Alto","prio":"B","pts":"48","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial","obs":"Endereço inconsistente entre fontes"},{"id":"L037","nome":"Adplan Administração","cat":"D - Condomínios","seg":"Administradora de condomínios","cidade":"Ribeirão Preto","dist":"0","bairro":"Centro","end":"Rua Garibaldi, 404, Centro","fonte":"guiatelefone.com/empresas/ribeirao-preto-sp/administracao-financeira/administracao-de-condominios","servico":"Guarda-corpo/corrimão, vidros, portas","justif":"Perfil adequado, sem contato direto confirmado","recorr":"Alto","prio":"C","pts":"40","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L038","nome":"Lello Condomínios (atuação em RP)","cat":"D - Condomínios","seg":"Administradora de condomínios (rede nacional)","cidade":"Ribeirão Preto","dist":"0","fonte":"sindiconet.com.br/informese/lello-condominios-noticias-radar-lello","indicio":"Notícia de expansão de 2022; carteira ampla de condomínios verticais","servico":"Guarda-corpo, cobertura de área comum, portas, vidros","justif":"Grande administradora nacional, mas operação atual em RP não confirmada","recorr":"Alto","prio":"C","pts":"35","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L039","nome":"ARCON Administração Condominial","cat":"D - Condomínios","seg":"Administradora de condomínios","cidade":"Ribeirão Preto","dist":"0","tel":"(16) 3043-1235","site":"arconribeirao.com.br","fonte":"arconribeirao.com.br","servico":"Guarda-corpo/corrimão, cobertura de área comum, vidros, portas","justif":"Telefone e site confirmados","recorr":"Alto","prio":"B","pts":"58","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L040","nome":"Gouvêa Marin - Administração de Condomínios","cat":"D - Condomínios","seg":"Administradora de condomínios","cidade":"Ribeirão Preto","dist":"0","tel":"(16) 3964-5000","email":"contato@gouveamarin.com.br","site":"gouveamarin.com.br","fonte":"gouveamarin.com.br","indicio":"Empresa ativa na cidade desde 2006","servico":"Guarda-corpo/corrimão, cobertura de área comum, vidros, portas","justif":"Dados completos de contato, empresa estabelecida há quase 20 anos","recorr":"Alto","prio":"B","pts":"60","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial","dem":true},{"id":"L041","nome":"Condominium – Síndicos Profissionais","cat":"D - Condomínios","seg":"Síndico profissional","cidade":"Ribeirão Preto","dist":"0","tel":"(16) 98113-4711 / (16) 3236-7558","fonte":"busca 'Condominium Síndicos Profissionais Ribeirão Preto' (URL exata não confirmada)","servico":"Guarda-corpo/corrimão, vidros, portas","justif":"Síndico profissional atua como decisor de manutenção predial em vários condomínios","recorr":"Alto","prio":"B","pts":"50","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L042","nome":"Gecon Prime / Gecon Condomínios – unidade Ribeirão Preto","cat":"D - Condomínios","seg":"Administradora de condomínios","cidade":"Ribeirão Preto","dist":"0","tel":"(16) 99605-0016","wa":"(16) 99605-0016 (não confirmado)","site":"geconcondominios.com.br/gecon-ribeirao-preto","fonte":"geconcondominios.com.br/gecon-ribeirao-preto","servico":"Guarda-corpo/corrimão, cobertura de área comum, vidros, portas","justif":"Telefone e site confirmados","recorr":"Alto","prio":"B","pts":"55","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L043","nome":"IMB – Serviços de Apoio Administrativo a Empresas","cat":"D - Condomínios","seg":"Administradora/gestão de condomínios","cidade":"Ribeirão Preto","dist":"0","site":"administradoraimb.com.br","fonte":"administradoraimb.com.br/gestao-de-condominios-em-ribeirao-preto","servico":"Guarda-corpo/corrimão, vidros, portas","justif":"Site confirmado, sem telefone direto","recorr":"Alto","prio":"C","pts":"40","conf":"Baixa","prox":"Buscar WhatsApp via site/Instagram e enviar mensagem inicial"},{"id":"L044","nome":"Gardener Service (manutenção predial/facilities)","cat":"D - Condomínios","seg":"Manutenção predial/facilities","cidade":"Ribeirão Preto","dist":"0","end":"Rua Paschoal Bardaro, 895 – Cond. Itamaraty","fonte":"solutudo.com.br/gardener-service-576717","servico":"Potencial parceiro/subcontratante (elétrica, hidráulica, pintura, alvenaria)","justif":"Presta manutenção a condomínios, bom canal de parceria","recorr":"Médio","prio":"B","pts":"45","conf":"Média","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L045","nome":"Crispim Manutenção Condominial, Residencial e Predial","cat":"D - Condomínios","seg":"Manutenção predial","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim São Luiz","fonte":"ohub.com.br/empresa/crispim-manutencao-condominial-residencial-e-predialribeirao-preto%20-%20sp-239655","servico":"Potencial parceiro/subcontratante","justif":"Presta manutenção predial, canal de parceria","recorr":"Médio","prio":"C","pts":"38","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L046","nome":"Veguel Imóveis","cat":"C - Mercado Imobiliário","seg":"Imobiliária (alto padrão)","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Sumaré","end":"Av. Sumaré, 284, Jardim Sumaré","fonte":"diretórios (ZapImóveis/WiImóveis/BenditoGuia/Trovit)","servico":"Reforma pré-venda, substituição de box, fechamento de sacada","justif":"Especialista em alto padrão, segmento com maior ticket médio","recorr":"Alto","prio":"B","pts":"58","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L047","nome":"Índice Imóveis","cat":"C - Mercado Imobiliário","seg":"Imobiliária (gestão imobiliária)","cidade":"Ribeirão Preto","dist":"0","end":"Rua Joaquim Antônio Nascimento, 73, Cond. Itamaraty (CRECI 45683-J-SP)","fonte":"diretórios","servico":"Reforma pré-venda, substituição de box","justif":"Médio/alto padrão com gestão imobiliária ativa","recorr":"Alto","prio":"B","pts":"55","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L048","nome":"JFC Imobiliária","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Ribeirão Preto","dist":"0","bairro":"Alto da Boa Vista","end":"Rua Ayrton Roxo, 812, Alto da Boa Vista (CRECI 23126-J)","fonte":"diretórios","indicio":"Programa 'Aluguel Garantido'","servico":"Reforma para locação/revenda","justif":"Programa de aluguel garantido indica alto volume de imóveis preparados para locação","recorr":"Alto","prio":"B","pts":"50","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L049","nome":"Roca Administradora de Imóveis Eireli","cat":"C - Mercado Imobiliário","seg":"Administradora de imóveis comerciais","cidade":"Ribeirão Preto","dist":"0","bairro":"Centro","fonte":"diretórios (CRECI 19414-J-SP)","indicio":"Administra prédios/salas comerciais no Centro de RP","servico":"Manutenção/reforma de imóveis comerciais, vidros e portas","justif":"Administra imóveis comerciais, demanda recorrente de manutenção","recorr":"Alto","prio":"B","pts":"52","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L050","nome":"Navarro Imóveis","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Ribeirão Preto","dist":"0","bairro":"Centro","end":"Rua Lafaiete, Centro","fonte":"diretórios","servico":"Reforma pré-venda/locação","justif":"Perfil adequado, sem contato confirmado","recorr":"Alto","prio":"C","pts":"35","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L051","nome":"Legal Imobiliária","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Ribeirão Preto","dist":"0","end":"CEP 14096-730","tel":"(16) 99192-2880","fonte":"diretórios","servico":"Reforma pré-venda/locação","justif":"Telefone confirmado","recorr":"Alto","prio":"B","pts":"45","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L052","nome":"Brudie Imóveis","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Paulista","tel":"(16) 99706-5532","fonte":"diretórios","servico":"Reforma pré-venda/locação","justif":"Telefone confirmado","recorr":"Alto","prio":"B","pts":"45","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L053","nome":"Larraz Imóveis","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Ribeirão Preto","dist":"0","bairro":"Centro","end":"Rua Lafaiete, 1616, Centro","fonte":"diretórios (status 'Fechado' na fonte)","servico":"Reforma pré-venda/locação","justif":"Status de funcionamento incerto","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L054","nome":"Athenas Imobiliárias","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Ribeirão Preto","dist":"0","bairro":"Centro","end":"Rua Visconde de Inhaúma, Centro","tel":"(16) 3607-6690 (possível atribuição incorreta na fonte)","fonte":"diretórios","servico":"Reforma pré-venda/locação","justif":"Dados de contato pouco confiáveis","recorr":"Médio","prio":"C","pts":"35","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L055","nome":"RE/MAX Cidade Campo","cat":"C - Mercado Imobiliário","seg":"Imobiliária (rede, médio/alto padrão)","cidade":"Ribeirão Preto","dist":"0","bairro":"Alto da Boa Vista","fonte":"diretórios","servico":"Reforma pré-venda, substituição de box","justif":"Rede conhecida, atua em médio/alto padrão","recorr":"Alto","prio":"B","pts":"55","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L056","nome":"Fernando Moura Gestão Ativos","cat":"C - Mercado Imobiliário","seg":"Corretor (foco em lançamentos)","cidade":"Ribeirão Preto / Bonfim Paulista","dist":"10","fonte":"diretórios (CRECI-SP 153042-F)","indicio":"Foco em lançamentos em Bonfim Paulista e Jardim Olhos d'Água","servico":"Indicação para compradores de imóveis novos","justif":"Corretor focado em lançamentos, bom indicador para clientes em fase de reforma pós-compra","recorr":"Médio","prio":"B","pts":"50","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L057","nome":"Saint Moritz Corretores de Imóveis","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Ribeirão Preto","dist":"0","bairro":"Centro","end":"Av. Independência, Centro","tel":"(16) 3237-5062","fonte":"diretórios","servico":"Reforma pré-venda/locação","justif":"Telefone confirmado","recorr":"Alto","prio":"B","pts":"45","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L058","nome":"Café Reyna Imobiliária","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Ribeirão Preto","dist":"0","tel":"(16) 3607-6690 (possível atribuição incorreta na fonte, mesmo nº de Athenas)","fonte":"diretórios","servico":"Reforma pré-venda/locação","justif":"Dados de contato pouco confiáveis","recorr":"Médio","prio":"C","pts":"35","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L059","nome":"Argemiro Imóveis","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Ribeirão Preto","dist":"0","tel":"(16) 3625-1545","fonte":"diretórios","servico":"Reforma pré-venda/locação","justif":"Telefone confirmado","recorr":"Médio","prio":"C","pts":"35","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L060","nome":"Hard Rock Café Ribeirão Preto","cat":"E - Clientes Comerciais","seg":"Restaurante/bar temático","cidade":"Ribeirão Preto","dist":"0","bairro":"Ribeirânia (Arena NicNet)","end":"Rua Edgar Rodrigues, 200, Ribeirânia","tel":"+55 16 98210-2318","site":"cafe.hardrock.com/ribeirao-preto/","insta":"@hrc.ribeiraopreto (não confirmado oficialmente)","fonte":"baressp.com.br; cafe.hardrock.com/ribeirao-preto; gironews.com","indicio":"Abertura de unidade nova na cidade","servico":"Portas, vitrines, fachadas, divisórias para nova unidade","justif":"Abertura confirmada de unidade nova, demanda de instalação imediata","recorr":"Médio","prio":"A","pts":"70","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial","obs":"Endereço varia entre fontes","dem":true},{"id":"L061","nome":"Bar do Zeca Pagodinho (filial Ribeirão Preto)","cat":"E - Clientes Comerciais","seg":"Bar/casa de show","cidade":"Ribeirão Preto","dist":"0","bairro":"Ribeirânia (Arena NicNet)","end":"Praça Francisco Oranges, 100, Ribeirânia","fonte":"baressp.com.br","indicio":"Abertura de nova filial (data exata incerta)","servico":"Portas, vitrines, fachadas, divisórias","justif":"Abertura de filial confirmada, data incerta","recorr":"Médio","prio":"B","pts":"55","conf":"Baixa-média","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L062","nome":"Soneda (loja RibeirãoShopping)","cat":"E - Clientes Comerciais","seg":"Loja (perfumaria/cosméticos)","cidade":"Ribeirão Preto","dist":"0","bairro":"RibeirãoShopping","fonte":"mercadoeconsumo.com.br","indicio":"Abertura de loja em 31/03/2026, 25ª unidade fora da capital SP","servico":"Vitrines, divisórias e fachada de loja em shopping","justif":"Abertura de loja confirmada com data exata","recorr":"Médio","prio":"A","pts":"68","conf":"Alta (abertura); endereço não confirmado","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L063","nome":"Maravilhas do Lar (megaloja)","cat":"E - Clientes Comerciais","seg":"Loja (casa/decoração)","cidade":"Ribeirão Preto","dist":"0","end":"Av. Independência, 1640","fonte":"noticias-do-brasil.news","indicio":"Inauguração de megaloja de 780 m² em 08/07/2026","servico":"Vitrines, fachada, divisórias para megaloja","justif":"Inauguração de grande porte confirmada com data e metragem","recorr":"Médio","prio":"A","pts":"70","conf":"Média","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L064","nome":"Paulistão Atacadista — 2ª unidade (Grupo Savegnago)","cat":"E - Clientes Comerciais","seg":"Loja/atacarejo","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Sumaré","end":"Esquina Av. Prof. João Fiúsa x Av. Caramuru, Jardim Sumaré","fonte":"supervarejo.com.br; gironews.com","indicio":"Inauguração em 22/05/2025, investimento de R$60 milhões, 200 empregos gerados","servico":"Vitrines, fachada, portas e coberturas para nova unidade","justif":"Investimento alto e confirmado, grande porte","recorr":"Médio","prio":"A","pts":"85","conf":"Alta","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L065","nome":"Grupo Savegnago — Loja 9 (supermercado)","cat":"E - Clientes Comerciais","seg":"Loja/supermercado","cidade":"Ribeirão Preto","dist":"0","end":"Rua Javari, 4.819","fonte":"supervarejo.com.br","indicio":"Reinauguração após modernização estrutural completa, investimento de R$10,3 milhões (28/05/2026)","servico":"Vitrines, fachada, portas para reforma estrutural","justif":"Reforma de grande porte confirmada com investimento alto","recorr":"Médio","prio":"A","pts":"80","conf":"Alta","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L066","nome":"AmorSaúde (nova sede administrativa)","cat":"E - Clientes Comerciais","seg":"Clínica médica (rede)","cidade":"Ribeirão Preto","dist":"0","fonte":"medicinasa.com.br/amorsaude-sede","indicio":"Inauguração de nova sede, investimento de R$5 milhões, 876 m², dois edifícios e auditório de 170 m²","servico":"Esquadrias, vidros e divisórias para nova sede","justif":"Investimento confirmado em nova sede de grande porte","recorr":"Médio","prio":"B","pts":"60","conf":"Média","prox":"Validar dados (Google Maps/telefone) antes de abordar","obs":"Data exata e endereço não confirmados","dem":true},{"id":"L067","nome":"Faculdade Metropolitana (FAMEESP)","cat":"E - Clientes Comerciais","seg":"Escola particular (ensino superior)","cidade":"Ribeirão Preto","dist":"0","end":"Av. Francisco Junqueira, 2300 (endereço anterior: Av. Presidente Kennedy, 1693, Lagoinha)","tel":"(16) 3632-6202 / 3610-8659 (assessoria de imprensa)","site":"www.faculdademetropolitana.edu.br","fonte":"jornaldobras.com.br","indicio":"Anúncio (ago/2025) de nova sede/campus; abertura efetiva não confirmada","servico":"Esquadrias, vidros e divisórias para novo campus","justif":"Nova sede anunciada, mas abertura ainda não confirmada","recorr":"Médio","prio":"B","pts":"55","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial","dem":true},{"id":"L068","nome":"Royal Tulip JP Ribeirão Preto (ex-Hotel JP Resort, operado por Nacional Inn)","cat":"E - Clientes Comerciais","seg":"Hotel","cidade":"Ribeirão Preto","dist":"0","end":"Via Dr. Jeremias de Paula Martins, 101","tel":"+55 16 2101-1400 (variação: 2108-0781, a confirmar)","site":"www.nacionalinn.com.br/hoteis/hotel-jp-ribeirao-preto","fonte":"diariodoturismo.com.br","indicio":"Retrofit anunciado de R$1 milhão em 19 unidades + rebranding para Royal Tulip","servico":"Esquadrias, vidros e guarda-corpos no retrofit das unidades","justif":"Retrofit confirmado com investimento definido, status atual não confirmado","recorr":"Médio","prio":"B","pts":"58","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial","dem":true},{"id":"L069","nome":"TRYP by Wyndham Ribeirão Preto Nacional Inn","cat":"E - Clientes Comerciais","seg":"Hotel","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Nova Aliança","end":"Av. Dr. José Cesário Monteiro da Silva, 150, Jardim Nova Aliança","fonte":"panrotas.com.br; brasilturis.com.br","indicio":"Nacional Inn assumiu administração em 02/06/2026 (256 apartamentos), ampliação de presença na cidade","servico":"Esquadrias, vidros e guarda-corpos em possível reforma de padronização","justif":"Nova administração assumida recentemente, frequentemente gera reformas de padronização","recorr":"Médio","prio":"A","pts":"75","conf":"Alta","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L070","nome":"Arco Hotel Ribeirão Preto II (restaurante Senhor Chopp)","cat":"E - Clientes Comerciais","seg":"Hotel/restaurante","cidade":"Ribeirão Preto","dist":"0","bairro":"Nova Aliança","end":"Av. Braz Olaia Acosta, 1920, Nova Aliança","fonte":"diariodoturismo.com.br","indicio":"Inauguração de novo restaurante dentro do hotel (data exata não confirmada)","servico":"Portas, vitrines e divisórias para novo restaurante","justif":"Inauguração de novo espaço confirmada","recorr":"Médio","prio":"B","pts":"55","conf":"Média","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L071","nome":"estudiobola (1ª loja em Ribeirão Preto)","cat":"E - Clientes Comerciais","seg":"Loja (móveis/decoração, franquia)","cidade":"Ribeirão Preto","dist":"0","fonte":"jornaldobras.com.br","indicio":"Inauguração da primeira loja em RP, projeto de ~1.000 m² por Basiches Arquitetos (evento de lançamento em 25/06, ano não confirmado)","servico":"Vitrines, fachada e divisórias para loja nova","justif":"Primeira loja da marca na cidade, projeto de grande metragem","recorr":"Médio","prio":"B","pts":"58","conf":"Média","prox":"Validar dados (Google Maps/telefone) antes de abordar","obs":"Endereço e ano não confirmados","dem":true},{"id":"L072","nome":"Pague Menos — 2ª unidade (supermercados)","cat":"E - Clientes Comerciais","seg":"Loja/supermercado","cidade":"Ribeirão Preto","dist":"0","bairro":"Santa Cruz","fonte":"gironews.com","indicio":"Compra de terreno no bairro Santa Cruz para 2ª unidade, prevista para 2026; abertura ainda não confirmada","servico":"Vitrines, fachada, portas para nova unidade","justif":"Apenas intenção/compra de terreno, sem obra confirmada","recorr":"Médio","prio":"C","pts":"40","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar","dem":true},{"id":"L073","nome":"Leroy Merlin Ribeirão Preto","cat":"G - Parceiros e Indicadores","seg":"Loja de materiais de construção (rede)","cidade":"Ribeirão Preto","dist":"0","end":"Av. Castelo Branco, 3000 (divergência: outra fonte cita Av. Cel. Fernando Ferreira Leite, 1540, Ribeirão Shopping)","site":"leroymerlin.com.br","fonte":"tiendeo.com.br; comerciosaopaulo.com.br","servico":"Indicação / fornecimento complementar","justif":"Rede nacional conhecida, bom canal de indicação apesar de dados de endereço divergentes","recorr":"Médio","prio":"B","pts":"50","conf":"Média","prox":"Buscar WhatsApp via site/Instagram e enviar mensagem inicial"},{"id":"L074","nome":"Base Certa Comércio de Materiais de Construção","cat":"G - Parceiros e Indicadores","seg":"Loja de materiais de construção","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Zara","end":"Rua Stefano Baruffi, 1825, Jardim Zara, CEP 14092-060","tel":"(16) 8848-9434 (formato incompleto)","fonte":"solutudo.com.br","servico":"Fornecimento complementar / indicação","justif":"Dados de contato pouco confiáveis","recorr":"Médio","prio":"C","pts":"35","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L075","nome":"Avenida Materiais para Construção","cat":"G - Parceiros e Indicadores","seg":"Loja de materiais de construção","cidade":"Ribeirão Preto","dist":"0","bairro":"Centro","end":"Av. Dr. Francisco Junqueira, 205, Centro","fonte":"benditoguia.com.br","servico":"Fornecimento complementar / indicação","justif":"Dados limitados","recorr":"Médio","prio":"C","pts":"32","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L076","nome":"Todo Teto Casa & Construção Ltda","cat":"G - Parceiros e Indicadores","seg":"Loja de materiais de construção","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Sumaré","end":"Av. Sumaré, 223, Jardim Sumaré","fonte":"solutudo.com.br","servico":"Fornecimento complementar / indicação","justif":"Dados limitados","recorr":"Médio","prio":"C","pts":"32","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L077","nome":"Marmoraria Castelo Ribeirão Preto Ltda","cat":"G - Parceiros e Indicadores","seg":"Marmoraria","cidade":"Ribeirão Preto","dist":"0","bairro":"Pq. dos Bandeirantes","end":"Rua Afonso Schimidt, 736, Pq. dos Bandeirantes, CEP 14090-470","tel":"(16) 3877-6132","fonte":"solutudo.com.br","servico":"Indicação / fornecimento complementar (bancadas + box/guarda-corpo de vidro)","justif":"Segmento complementar forte (bancadas combinam com box de vidro)","recorr":"Alto","prio":"B","pts":"48","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L078","nome":"VMK Mármores e Granitos","cat":"G - Parceiros e Indicadores","seg":"Marmoraria","cidade":"Ribeirão Preto","dist":"0","end":"CEP 14077-370","tel":"(16) 99776-8978","fonte":"guiafacil.com","servico":"Indicação / fornecimento complementar","justif":"Segmento complementar","recorr":"Médio","prio":"C","pts":"35","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L079","nome":"EMIGRAN Mármores e Granitos","cat":"G - Parceiros e Indicadores","seg":"Marmoraria","cidade":"Ribeirão Preto","dist":"0","bairro":"Vila Brasil","end":"Av. Marechal Costa e Silva, Vila Brasil, CEP 14075-600","tel":"(16) 3969-1390","fonte":"guiafacil.com","servico":"Indicação / fornecimento complementar","justif":"Segmento complementar","recorr":"Médio","prio":"C","pts":"38","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L080","nome":"Marcenaria Casa Arco","cat":"G - Parceiros e Indicadores","seg":"Marcenaria/móveis planejados","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim América","end":"Rua Marechal Rondon, 545, Jardim América, CEP 14020-220","tel":"(16) 99109-1055","wa":"(16) 99109-1055","fonte":"listamais.com.br","servico":"Indicação / atendimento conjunto (projetos de interiores)","justif":"Bom canal de atendimento conjunto em projetos de interiores","recorr":"Médio","prio":"C","pts":"35","conf":"Baixa-Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L081","nome":"Vintara Fábrica de Móveis Ltda","cat":"G - Parceiros e Indicadores","seg":"Marcenaria/móveis planejados","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Palma Travassos","end":"Av. Maria de Jesus Condeixa, 600, sala 914, CEP 14091-240","tel":"(16) 98114-9978","fonte":"solutudo.com.br","servico":"Indicação / atendimento conjunto","justif":"Segmento complementar","recorr":"Médio","prio":"C","pts":"33","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L082","nome":"Studio Cabana Marcenaria Exclusiva Ltda","cat":"G - Parceiros e Indicadores","seg":"Marcenaria/móveis planejados","cidade":"Ribeirão Preto","dist":"0","bairro":"Vila Elisa","end":"Rua Taubaté, 2765, Vila Elisa, CEP 14075-020","fonte":"solutudo.com.br","servico":"Indicação / atendimento conjunto","justif":"Dados limitados","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L083","nome":"Formatto Móveis Finos Ltda","cat":"G - Parceiros e Indicadores","seg":"Marcenaria/móveis planejados","cidade":"Ribeirão Preto","dist":"0","bairro":"Vila Mariana","end":"Rua Amparo, 1458, Vila Mariana, CEP 14075-120","fonte":"solutudo.com.br","servico":"Indicação / atendimento conjunto","justif":"Dados limitados","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L084","nome":"Ambiental Paisagismo","cat":"G - Parceiros e Indicadores","seg":"Paisagismo","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim São Luiz","end":"Rua Doutor Paulo Barra, Jardim São Luiz, CEP 14020-320","tel":"(16) 3325-6254 (ressalva: nº associado a pet shop na fonte)","fonte":"guiafacil.com","servico":"Indicação (pergolados/coberturas em projetos de jardim)","justif":"Telefone pouco confiável","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L085","nome":"Ipê Amarelo Paisagismo Vasos e Plantas Ornamentais","cat":"G - Parceiros e Indicadores","seg":"Paisagismo","cidade":"Ribeirão Preto","dist":"0","end":"CEP 14030-000","tel":"(16) 3913-4085","fonte":"guiafacil.com","servico":"Indicação","justif":"Segmento complementar de paisagismo","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L086","nome":"Aqualima Piscinas","cat":"G - Parceiros e Indicadores","seg":"Piscinas","cidade":"Ribeirão Preto","dist":"0","bairro":"Vila Virgínia","end":"Rua Euclides da Cunha, 1084, Vila Virgínia, CEP 14030-460","fonte":"ohub.com.br","servico":"Indicação / fornecimento complementar (guarda-corpo e fechamento de área de piscina)","justif":"Segmento altamente complementar (guarda-corpo em área de piscina)","recorr":"Médio","prio":"C","pts":"32","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L087","nome":"Oasis Piscinas","cat":"G - Parceiros e Indicadores","seg":"Piscinas","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim América","end":"Av. Pres. Vargas, 1425, Jardim América, CEP 14020-260","tel":"(16) 3623-4706 (ressalva: menção inconsistente a 'Atibaia' na fonte)","fonte":"benditoguia.com.br","servico":"Indicação / fornecimento complementar","justif":"Dado de telefone com inconsistência na fonte","recorr":"Médio","prio":"C","pts":"32","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L088","nome":"Tudo em Fibra Piscinas","cat":"G - Parceiros e Indicadores","seg":"Piscinas","cidade":"Ribeirão Preto","dist":"0","end":"CEP 14075-390","tel":"(16) 99187-6472","fonte":"guiafacil.com","servico":"Indicação / fornecimento complementar","justif":"Segmento complementar de piscinas","recorr":"Médio","prio":"C","pts":"32","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L089","nome":"WG Serralheria","cat":"G - Parceiros e Indicadores","seg":"Serralheria (grades, portões, estruturas metálicas)","cidade":"Ribeirão Preto","dist":"0","end":"CEP 14060-010 (possível status 'fechado')","tel":"(16) 99331-8141","fonte":"guiafacil.com","servico":"Fornecimento complementar / atendimento conjunto","justif":"Não executa esquadria de alumínio/vidro, bom parceiro complementar","recorr":"Médio","prio":"C","pts":"33","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L090","nome":"Style Toldos e Coberturas","cat":"G - Parceiros e Indicadores","seg":"Toldos/coberturas","cidade":"Ribeirão Preto","dist":"0","bairro":"Ipiranga","end":"Rua Vila Bela, 1031, Ipiranga, CEP 14060-020","tel":"(16) 3969-1831","fonte":"guiatelefone.com","servico":"Indicação (serviço adjacente a fechamento de varanda/cobertura)","justif":"Serviço diretamente adjacente ao fechamento de varanda/cobertura","recorr":"Médio","prio":"B","pts":"45","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L091","nome":"Instalar Soluções (ar-condicionado)","cat":"G - Parceiros e Indicadores","seg":"Instalação de ar-condicionado","cidade":"Ribeirão Preto","dist":"0","bairro":"Jardim Herculano Fernandes","fonte":"ohub.com.br","servico":"Indicação (obras residenciais/comerciais)","justif":"Atua em obras residenciais/comerciais que também precisam de esquadrias/vidros","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L092","nome":"SERTFORT Engenharia e Empreendimentos Ltda","cat":"A - Construção Civil","seg":"Engenharia/construção","cidade":"Sertãozinho","dist":"23","bairro":"Jardim Campo Belo","end":"Rua João Mermejo, 102, Jardim Campo Belo","tel":"(16) 9278-6219","email":"niltonramos908@gmail.com","fonte":"cnpja.com/office/68620604000174","indicio":"Registro de CNPJ recente (ago/2026)","servico":"Esquadrias de alumínio e vidros","justif":"Empresa de registro recente, provavelmente em fase de estruturação/obras","recorr":"Médio","prio":"B","pts":"55","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial","dem":true},{"id":"L093","nome":"Acso Estruturas de Aço Ltda","cat":"G - Parceiros e Indicadores","seg":"Estruturas metálicas","cidade":"Sertãozinho","dist":"23","bairro":"Centro","end":"Rua Aprígio de Araújo, 1682, Centro, CEP 14160-550","tel":"(16) 99218-8274","fonte":"solutudo.com.br","servico":"Fornecimento complementar / parceria (coberturas metálicas)","justif":"Estruturas de aço são complementares a coberturas e pergolados","recorr":"Médio","prio":"B","pts":"45","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L094","nome":"Construtora Amorim (Edna Silva de Amorim Cordeiro)","cat":"A - Construção Civil","seg":"Construtora/empreiteira","cidade":"Sertãozinho","dist":"23","tel":"(16) 99133-7720","wa":"(16) 99133-7720","fonte":"solutudo.com.br","servico":"Esquadrias de alumínio e vidros","justif":"Dados de contato confirmados, sem evidência específica de obra","recorr":"Médio","prio":"C","pts":"35","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L095","nome":"SER-RIO Construtora Ltda","cat":"A - Construção Civil","seg":"Construtora (administração de obras)","cidade":"Sertãozinho","dist":"23","fonte":"monitorcnpj.com.br/cnpj/08022820000196/","servico":"Esquadrias de alumínio e vidros","justif":"Apenas confirma existência/atividade","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L096","nome":"Quer Imóvel","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Cravinhos","dist":"15","fonte":"nestoria.com.br/cravinhos/casas/aluguel","servico":"Reforma pré-venda/locação","justif":"Dados muito limitados","recorr":"Médio","prio":"C","pts":"28","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L097","nome":"KF Negócios Imobiliários","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Cravinhos","dist":"15","bairro":"Bella Cravinhos","fonte":"chavesnamao.com.br","servico":"Reforma pré-venda/locação","justif":"Dados muito limitados","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L098","nome":"Emprol Imobiliária","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Jardinópolis","dist":"20","bairro":"Centro","end":"Rua Coronel José Theodoro, Centro, CEP 14680-000","tel":"(16) 3663-5903","fonte":"guiafacil.com","servico":"Reforma pré-venda/locação","justif":"Telefone confirmado","recorr":"Médio","prio":"B","pts":"42","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L099","nome":"Dutra Imobiliária","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Jardinópolis","dist":"20","bairro":"Centro","end":"Rua Professor Euclídes Berard, 291, Centro","tel":"(16) 3663-2310 (não confirmado)","fonte":"guiafacil.com","servico":"Reforma pré-venda/locação","justif":"Telefone possivelmente de outra empresa na mesma listagem","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L100","nome":"Master Jardinópolis Empreendimentos e Construções","cat":"A - Construção Civil","seg":"Imobiliária/Construtora","cidade":"Jardinópolis","dist":"20","end":"CEP 14680-000","tel":"(16) 99105-6868","wa":"(16) 99105-6868 (não confirmado)","fonte":"guiafacil.com","servico":"Esquadrias de alumínio e vidros","justif":"Telefone confirmado, atua como construtora/imobiliária","recorr":"Médio","prio":"B","pts":"45","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L101","nome":"Une Imóveis RP","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Jardinópolis","dist":"20","fonte":"guiafacil.com","servico":"Reforma pré-venda/locação","justif":"Dados muito limitados","recorr":"Médio","prio":"C","pts":"28","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L102","nome":"J. Sacoman Serviços e Construções Ltda","cat":"A - Construção Civil","seg":"Construtora","cidade":"Serrana","dist":"24","bairro":"Jardim do Alto","end":"Rua João de Aguiar, 319, Jardim do Alto, CEP 14150-000","fonte":"solutudo.com.br","servico":"Esquadrias de alumínio e vidros","justif":"Dados muito limitados","recorr":"Médio","prio":"C","pts":"30","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L103","nome":"B&G Imóveis","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Serrana","dist":"24","fonte":"loft.com.br/home/5bwl4rq2","servico":"Reforma pré-venda/locação","justif":"Citada apenas como parceira em anúncio de terceiros","recorr":"Médio","prio":"C","pts":"28","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L104","nome":"Residencial São Marcos SPE Ltda (vinculada à Fenco Construtora)","cat":"A - Construção Civil","seg":"Incorporadora/Construtora","cidade":"Brodowski","dist":"24","bairro":"Centro","end":"Rua General Carneiro, 928, Centro, CEP 14340-000","tel":"(16) 99713-2023","wa":"(16) 99713-2023","fonte":"solutudo.com.br","servico":"Esquadrias de alumínio e vidros","justif":"Telefone confirmado, incorporadora ativa","recorr":"Médio","prio":"B","pts":"48","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L105","nome":"Construsantos Comércio e Construção Civil Ltda","cat":"A - Construção Civil","seg":"Construtora","cidade":"Brodowski","dist":"24","bairro":"Centro","end":"Rua Américo Ferreira, 531, Sala 04, Centro, CEP 14340-000","tel":"Parcial, terminando em 4148","fonte":"monitorcnpj.com.br/cnpj/00230138000187/","servico":"Esquadrias de alumínio e vidros","justif":"Telefone incompleto","recorr":"Médio","prio":"C","pts":"32","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L106","nome":"Danfer Engenharia e Construções (Andrea Pereira da Silva Ltda)","cat":"A - Construção Civil","seg":"Engenharia/Construtora","cidade":"Brodowski","dist":"24","bairro":"Centro","end":"Rua Vereador José Sabino, 72, Centro, CEP 14340-000","tel":"(16) 3664-6403","fonte":"cnpja.com/office/08821650000100","servico":"Esquadrias de alumínio e vidros","justif":"Telefone confirmado","recorr":"Médio","prio":"B","pts":"42","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L107","nome":"Visual Construções e Locações Ltda","cat":"A - Construção Civil","seg":"Construtora","cidade":"Brodowski","dist":"24","end":"Estrada Vicinal Brodowski-Juruce, km 2+100, zona rural","tel":"(16) 3761-4999 / (16) 3761-4499","fonte":"cnpja.com/office/08658420000171","servico":"Esquadrias de alumínio e vidros","justif":"Telefones confirmados","recorr":"Médio","prio":"B","pts":"42","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L108","nome":"Fabrício da Cruz Santos","cat":"A - Construção Civil","seg":"Construtor/empreiteiro autônomo","cidade":"Jaboticabal","dist":"57","bairro":"Jardim Angélica","end":"Rua Francisco Arré, 410, Jardim Angélica, CEP 14875-540","tel":"(16) 99379-5698","fonte":"solutudo.com.br","servico":"Esquadrias de alumínio e vidros","justif":"Telefone confirmado (com pequena inconsistência de cadastro)","recorr":"Baixo","prio":"C","pts":"30","conf":"Baixa","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L109","nome":"Carregari e Giangrecco Construção Civil","cat":"A - Construção Civil","seg":"Construtora","cidade":"Jaboticabal","dist":"57","bairro":"Centro","end":"Rua Juca Quito, Centro, CEP 14870-710","fonte":"guiafacil.com/cep/14870710","servico":"Esquadrias de alumínio e vidros","justif":"Dados muito limitados","recorr":"Baixo","prio":"C","pts":"28","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L110","nome":"JD Montagem de Estruturas Metálicas","cat":"G - Parceiros e Indicadores","seg":"Estruturas metálicas (coberturas/pergolados)","cidade":"Jaboticabal","dist":"57","end":"Rua Francisco Bruno Sobrinho, Conjunto Habitacional","tel":"(16) 3204-2573","fonte":"guiafacil.com","servico":"Fornecimento complementar / parceria (coberturas e pergolados)","justif":"Segmento diretamente complementar","recorr":"Médio","prio":"B","pts":"40","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L111","nome":"Prime Assessoria Imobiliária","cat":"C - Mercado Imobiliário","seg":"Imobiliária/Assessoria","cidade":"Jaboticabal","dist":"57","bairro":"Centro","end":"Rua Mizael de Campos, 288, Centro","tel":"(16) 99962-3564","wa":"(16) 99962-3564","fonte":"solutudo.com.br","servico":"Reforma pré-venda/locação","justif":"Telefone confirmado","recorr":"Médio","prio":"B","pts":"40","conf":"Média","prox":"Contatar via telefone/WhatsApp com mensagem inicial"},{"id":"L112","nome":"Imobiliária Henru","cat":"C - Mercado Imobiliário","seg":"Imobiliária","cidade":"Jaboticabal","dist":"57","bairro":"Centro","end":"Rua Vinte e Quatro de Maio, Centro, CEP 14870-350","fonte":"guiafacil.com","servico":"Reforma pré-venda/locação","justif":"Dados muito limitados","recorr":"Baixo","prio":"C","pts":"28","conf":"Baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"},{"id":"L113","nome":"Empreiteira Durigan","cat":"A - Construção Civil","seg":"Empreiteira","cidade":"Barrinha","dist":"35","end":"Associada ao CEP 14860-000 (endereço exato não encontrado)","fonte":"guiafacil.com/cep/14860000","servico":"Esquadrias de alumínio e vidros","justif":"Dados extremamente limitados","recorr":"Baixo","prio":"C","pts":"20","conf":"Muito baixa","prox":"Validar dados (Google Maps/telefone) antes de abordar"}]).map(l=>Object.assign({id:"",nome:"",cat:"",seg:"",cidade:"",dist:"",bairro:"",end:"",tel:"",wa:"",email:"",site:"",insta:"",resp:"",cargo:"",fonte:"",indicio:"",servico:"",justif:"",recorr:"",prio:"C",pts:"",conf:"",prox:"",obs:"",dem:false},l));
+const STATUS = ["Não iniciado","Abordado","Respondeu","Orçamento solicitado","Orçamento enviado","Fechado","Sem interesse"];
+const FINAL = ["Fechado","Sem interesse"];
+const JP = {nome:"JP Alumínios", resp:"Paulo Roberto", fone:"(16) 98816-3513"};
+const KEY = "jp_prospeccao_v1";
+
+let state = {};
+function load(){ try{ state = JSON.parse(localStorage.getItem(KEY)||"{}") || {}; }catch(e){ state = {}; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function st(id){ return state[id] || (state[id] = {status:"Não iniciado", nota:"", data:""}); }
+load();
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(t){ const e=$("#toast"); e.textContent=t; e.classList.add("show"); clearTimeout(toast.t); toast.t=setTimeout(()=>e.classList.remove("show"),2200); }
+
+// telefones
+function firstPhone(s){
+  if(!s) return null;
+  const m = String(s).match(/\(?\d{2}\)?\s?9?\d{4}[-\s]?\d{4}/);
+  if(!m) return null;
+  const digits = m[0].replace(/\D/g,"");
+  if(digits.length<10) return null;
+  return {digits, mobile: digits.length===11 && digits[2]==="9", unconfirmed:/não confirmado/i.test(s), raw:m[0]};
+}
+function waNumber(l){
+  const w = firstPhone(l.wa); if(w) return {...w, src:"wa"};
+  const t = firstPhone(l.tel); if(t && t.mobile) return {...t, src:"tel"};
+  return null;
+}
+function hasContact(l){ return !!(firstPhone(l.wa)||firstPhone(l.tel)||l.email); }
+
+// mensagens
+function saudacao(){ const h=new Date().getHours(); return h<12?"Bom dia":h<18?"Boa tarde":"Boa noite"; }
+function primeiroNome(l){ if(!l.resp) return ""; const n=l.resp.split(/[,(\/]/)[0].trim().split(/\s+/)[0]; return n; }
+function pitchFor(l){
+  const c = (l.cat||"")[0];
+  const base = {
+    A:"caixilharia de alumínio, pele de vidro, guarda-corpos, corrimãos e coberturas para obras, com equipe treinada e orçamento otimizado",
+    B:"caixilharia de alumínio, pele de vidro, escadas, corrimãos, guarda-corpos e coberturas sob medida, atendendo o projeto com segurança, conforto e acabamento",
+    C:"esquadrias, vidros, box para banheiro, espelhos e guarda-corpos para imóveis em venda, locação e reforma, com orçamento rápido e custo benefício",
+    D:"manutenção e troca de esquadrias, guarda-corpos, corrimãos, coberturas e pergolados para condomínios, com instalação por equipe especializada",
+    E:"caixilharia, pele de vidro, espelhos, coberturas e pergolados para o seu espaço comercial, com projeto sob medida e instalação completa",
+    G:"vidros e esquadrias de alumínio para os clientes e projetos que você atende, e queremos construir uma parceria de indicação"
+  };
+  return base[c] || base.A;
+}
+function buildMsg(l){
+  const nome = primeiroNome(l);
+  const ola = nome ? `${saudacao()}, ${nome}! Tudo bem?` : `${saudacao()}! Tudo bem?`;
+  const empresa = l.nome.replace(/\s*\(.*?\)\s*/g," ").trim();
+  const corpo = (l.cat||"")[0]==="G"
+    ? `Aqui é o Paulo, da ${JP.nome}, em Ribeirão Preto. Atuamos desde 2015 com ${pitchFor(l)}. Posso te apresentar nosso catálogo?`
+    : `Aqui é o Paulo, da ${JP.nome}, em Ribeirão Preto. Atuamos desde 2015 com ${pitchFor(l)}. Vi que a ${empresa} atua na região e gostaria de me colocar à disposição para orçamentos. Posso te enviar nosso catálogo?`;
+  return `${ola}\n\n${corpo}\n\nAbraço,\nPaulo Roberto\n${JP.nome} · ${JP.fone}`;
+}
+
+// filtros
+const cats = [...new Set(LEADS.map(l=>l.cat))].sort();
+const cities = [...new Set(LEADS.map(l=>l.cidade))].sort();
+$("#fCat").innerHTML = `<option value="">Todas as categorias</option>` + cats.map(c=>`<option>${esc(c)}</option>`).join("");
+$("#fCity").innerHTML = `<option value="">Todas as cidades</option>` + cities.map(c=>`<option>${esc(c)}</option>`).join("");
+$("#fStatus").innerHTML = `<option value="">Todos os status</option>` + STATUS.map(c=>`<option>${esc(c)}</option>`).join("");
+
+const f = {prio:new Set(), dem:false, cont:false, hide:false};
+document.querySelectorAll(".chip").forEach(ch=>{
+  const toggle = ()=>{
+    const on = ch.getAttribute("aria-pressed")!=="true";
+    ch.setAttribute("aria-pressed", on);
+    if(ch.dataset.prio){ on?f.prio.add(ch.dataset.prio):f.prio.delete(ch.dataset.prio); }
+    if(ch.id==="cDem") f.dem=on;
+    if(ch.id==="cCont") f.cont=on;
+    if(ch.id==="cHide") f.hide=on;
+    render();
+  };
+  ch.addEventListener("click",toggle);
+  ch.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
+});
+["q","fCat","fCity","fStatus","fSort"].forEach(id=>$("#"+id).addEventListener("input",render));
+$("#btnClear").onclick = ()=>{
+  $("#q").value=""; ["fCat","fCity","fStatus"].forEach(i=>$("#"+i).value="");
+  f.prio.clear(); f.dem=f.cont=f.hide=false;
+  document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+  render();
+};
+
+function norm(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
+
+function filtered(){
+  const q = norm($("#q").value), cat=$("#fCat").value, city=$("#fCity").value, stt=$("#fStatus").value;
+  let r = LEADS.filter(l=>{
+    if(cat && l.cat!==cat) return false;
+    if(city && l.cidade!==city) return false;
+    if(stt && st(l.id).status!==stt) return false;
+    if(f.prio.size && !f.prio.has(l.prio)) return false;
+    if(f.dem && !l.dem) return false;
+    if(f.cont && !hasContact(l)) return false;
+    if(f.hide && FINAL.includes(st(l.id).status)) return false;
+    if(q){
+      const hay = norm([l.nome,l.seg,l.bairro,l.resp,l.servico,l.indicio,l.end,l.cidade].join(" "));
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  const sort=$("#fSort").value, pr={A:0,B:1,C:2};
+  const num = v => parseFloat(String(v).replace(",","."))||0;
+  r.sort((a,b)=>{
+    if(sort==="nome") return a.nome.localeCompare(b.nome,"pt-BR");
+    if(sort==="dist") return num(a.dist)-num(b.dist) || num(b.pts)-num(a.pts);
+    if(sort==="pts") return num(b.pts)-num(a.pts);
+    return (pr[a.prio]-pr[b.prio]) || (num(b.pts)-num(a.pts));
+  });
+  return r;
+}
+
+function renderStats(){
+  const total=LEADS.length;
+  const cnt = s => LEADS.filter(l=>st(l.id).status===s).length;
+  const abordados = LEADS.filter(l=>st(l.id).status!=="Não iniciado").length;
+  const items = [
+    [total,"leads na base"],
+    [LEADS.filter(l=>l.prio==="A").length,"prioridade A"],
+    [LEADS.filter(l=>l.dem).length,"demanda imediata"],
+    [LEADS.filter(hasContact).length,"com contato direto"],
+    [abordados,"já abordados"],
+    [cnt("Respondeu")+cnt("Orçamento solicitado")+cnt("Orçamento enviado"),"em conversa"],
+    [cnt("Fechado"),"fechados"]
+  ];
+  $("#stats").innerHTML = items.map(([n,t])=>`<div class="stat"><b>${n}</b><span>${t}</span></div>`).join("");
+}
+
+function row(k,v){ return v? `<dt>${k}</dt><dd>${v}</dd>`:""; }
+function linkify(v){
+  if(!v) return "";
+  const s = String(v).trim();
+  const m = s.match(/^((?:https?:\/\/)?(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+(?:\/\S*)?)/i);
+  if(m && !/\s/.test(m[1].replace(/\/.*$/,""))){
+    const url = /^https?:/i.test(m[1])?m[1]:"https://"+m[1];
+    return `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(s)}</a>`;
+  }
+  return esc(s);
+}
+
+function card(l){
+  const s = st(l.id), p = waNumber(l), t = firstPhone(l.tel);
+  const lowConf = /baixa|muito/i.test(l.conf);
+  const done = FINAL.includes(s.status);
+  return `<article class="lead ${done?"done":""}" data-id="${l.id}">
+    <h3>${esc(l.nome)}</h3>
+    <div class="meta">
+      <span class="tag p${l.prio.toLowerCase()}">Prioridade ${esc(l.prio)} · ${esc(l.pts)} pts</span>
+      ${l.dem?'<span class="tag dem">Demanda imediata</span>':""}
+      <span class="tag">${esc(l.cat)}</span>
+      <span class="tag">${esc(l.cidade)}${l.dist!==""&&l.dist!=="0"?` · ${esc(l.dist)} km`:""}</span>
+      <span class="tag ${lowConf?"low":""}">Confiança ${esc(l.conf.split(";")[0])}</span>
+      ${l.recorr?`<span class="tag">Recorrência ${esc(l.recorr.toLowerCase())}</span>`:""}
+    </div>
+    ${l.resp?`<div class="hint">${esc(l.resp)}${l.cargo?` · ${esc(l.cargo)}`:""}</div>`:""}
+    <p class="why"><b>Por que abordar.</b> ${esc(l.justif||l.indicio)}<br>
+      <small><b>Oferecer.</b> ${esc(l.servico)}</small></p>
+    <div class="actions">
+      ${p?`<button class="btn wa" data-act="msg">${p.src==="wa"?"WhatsApp":"Tentar WhatsApp"}${p.unconfirmed?" (não confirmado)":""}</button>`:`<button class="btn" data-act="msg">Montar mensagem</button>`}
+      ${t?`<a class="btn" href="tel:+55${t.digits}">Ligar ${esc(t.raw)}</a>`:""}
+      ${l.email?`<a class="btn" href="mailto:${esc(l.email.split(/[;\s,]/)[0])}">E-mail</a>`:""}
+      <select data-act="status" aria-label="Status">${STATUS.map(x=>`<option ${x===s.status?"selected":""}>${x}</option>`).join("")}</select>
+    </div>
+    <details>
+      <summary>Detalhes e anotações</summary>
+      <dl class="kv">
+        ${row("Segmento",esc(l.seg))}
+        ${row("Indício de demanda",esc(l.indicio))}
+        ${row("Endereço",esc([l.end,l.bairro].filter(Boolean).join(" · ")))}
+        ${row("Telefone",esc(l.tel))}
+        ${row("WhatsApp",esc(l.wa))}
+        ${row("E-mail",esc(l.email))}
+        ${row("Site",linkify(l.site))}
+        ${row("Instagram",esc(l.insta))}
+        ${row("Próxima ação",esc(l.prox))}
+        ${row("Observações",esc(l.obs))}
+        ${row("Fonte",linkify(l.fonte))}
+        ${row("Primeira abordagem",esc(s.data))}
+      </dl>
+      <textarea class="note" data-act="nota" placeholder="Anotações da conversa...">${esc(s.nota)}</textarea>
+    </details>
+  </article>`;
+}
+
+function render(){
+  const r = filtered();
+  $("#count").textContent = `${r.length} de ${LEADS.length} leads`;
+  $("#list").innerHTML = r.length ? r.map(card).join("") : `<div class="empty">Nenhum lead com esses filtros.</div>`;
+  renderStats();
+}
+
+// eventos da lista
+$("#list").addEventListener("click",e=>{
+  const b=e.target.closest("[data-act=msg]"); if(!b) return;
+  openModal(b.closest(".lead").dataset.id);
+});
+$("#list").addEventListener("change",e=>{
+  if(e.target.dataset.act!=="status") return;
+  const id=e.target.closest(".lead").dataset.id, s=st(id);
+  s.status=e.target.value;
+  if(s.status!=="Não iniciado" && !s.data) s.data=new Date().toLocaleDateString("pt-BR");
+  save(); render();
+});
+$("#list").addEventListener("input",e=>{
+  if(e.target.dataset.act!=="nota") return;
+  st(e.target.closest(".lead").dataset.id).nota=e.target.value; save();
+});
+
+// modal
+let cur=null;
+function updateWa(){
+  const l=cur, p=waNumber(l);
+  const a=$("#mWa");
+  if(p){ a.style.display=""; a.href=`https://wa.me/55${p.digits}?text=${encodeURIComponent($("#mText").value)}`; }
+  else a.style.display="none";
+}
+function openModal(id){
+  cur = LEADS.find(l=>l.id===id);
+  $("#mTitle").textContent = cur.nome;
+  const p=waNumber(cur);
+  $("#mSub").textContent = p
+    ? `Envio para ${p.raw}${p.unconfirmed?" (número não confirmado, confira antes)":""}${p.src==="tel"?" (celular do cadastro, pode não ter WhatsApp)":""}`
+    : "Sem WhatsApp publicado. Copie o texto e use por outro canal.";
+  $("#mText").value = buildMsg(cur);
+  $("#mMail").style.display = cur.email?"":"none";
+  updateWa();
+  $("#modal").classList.add("open");
+}
+$("#mText").addEventListener("input",updateWa);
+$("#mClose").onclick=()=>$("#modal").classList.remove("open");
+$("#modal").addEventListener("click",e=>{ if(e.target.id==="modal") $("#modal").classList.remove("open"); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") $("#modal").classList.remove("open"); });
+$("#mCopy").onclick=async()=>{
+  try{ await navigator.clipboard.writeText($("#mText").value); toast("Texto copiado"); }
+  catch(e){ $("#mText").select(); document.execCommand("copy"); toast("Texto copiado"); }
+};
+$("#mMail").onclick=()=>{
+  const to=cur.email.split(/[;\s,]/)[0];
+  location.href=`mailto:${to}?subject=${encodeURIComponent("Vidros e esquadrias de alumínio, JP Alumínios")}&body=${encodeURIComponent($("#mText").value)}`;
+};
+$("#mMark").onclick=()=>{
+  const s=st(cur.id);
+  if(s.status==="Não iniciado") s.status="Abordado";
+  if(!s.data) s.data=new Date().toLocaleDateString("pt-BR");
+  save(); render(); $("#modal").classList.remove("open"); toast("Marcado como abordado");
+};
+$("#mWa").addEventListener("click",()=>{
+  const s=st(cur.id);
+  if(s.status==="Não iniciado"){ s.status="Abordado"; s.data=new Date().toLocaleDateString("pt-BR"); save(); setTimeout(render,300); }
+});
+
+// exportações
+function download(name,content,type){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([content],{type}));
+  a.download=name; document.body.appendChild(a); a.click(); a.remove();
+}
+$("#btnCsv").onclick=()=>{
+  const cols=["ID","Nome","Categoria","Cidade","Prioridade","Pontuação","Telefone","WhatsApp","E-mail","Responsável","Status","Primeira abordagem","Anotações"];
+  const q=v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`;
+  const lines=[cols.map(q).join(";")].concat(filtered().map(l=>{const s=st(l.id);
+    return [l.id,l.nome,l.cat,l.cidade,l.prio,l.pts,l.tel,l.wa,l.email,l.resp,s.status,s.data,s.nota].map(q).join(";");}));
+  download("prospeccao_jp_aluminios.csv","﻿"+lines.join("\n"),"text/csv;charset=utf-8");
+};
+$("#btnBackup").onclick=()=>download("backup_prospeccao_jp.json",JSON.stringify(state,null,2),"application/json");
+$("#btnRestore").onclick=()=>$("#fileRestore").click();
+$("#fileRestore").onchange=async e=>{
+  const file=e.target.files[0]; if(!file) return;
+  try{ state=JSON.parse(await file.text()); save(); render(); toast("Backup restaurado"); }
+  catch(err){ toast("Arquivo inválido"); }
+  e.target.value="";
+};
+$("#btnTheme").onclick=()=>{
+  const r=document.documentElement;
+  const dark = r.dataset.theme==="dark" || (!r.dataset.theme && matchMedia("(prefers-color-scheme:dark)").matches);
+  r.dataset.theme = dark?"light":"dark";
+};
+
+render();
+</script>
+</body>
+</html>
