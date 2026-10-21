@@ -223,7 +223,8 @@ const KEY = "jp_prospeccao_v1";
 
 let state = {};
 function load(){ try{ state = JSON.parse(localStorage.getItem(KEY)||"{}") || {}; }catch(e){ state = {}; } }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function pruned(){ const o={}; for(const k in state){ const s=state[k]; if(s.status!=="Não iniciado"||s.nota||s.data) o[k]=s; } return o; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(pruned())); }catch(e){} }
 function st(id){ return state[id] || (state[id] = {status:"Não iniciado", nota:"", data:""}); }
 load();
 
@@ -282,17 +283,17 @@ document.querySelectorAll(".chip").forEach(ch=>{
     if(ch.id==="cDem") f.dem=on;
     if(ch.id==="cCont") f.cont=on;
     if(ch.id==="cHide") f.hide=on;
-    render();
+    window.__lim=60; render();
   };
   ch.addEventListener("click",toggle);
   ch.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
 });
-["q","fCat","fCity","fStatus","fSort"].forEach(id=>$("#"+id).addEventListener("input",render));
+["q","fCat","fCity","fStatus","fSort"].forEach(id=>$("#"+id).addEventListener("input",()=>{ window.__lim=60; render(); }));
 $("#btnClear").onclick = ()=>{
   $("#q").value=""; ["fCat","fCity","fStatus"].forEach(i=>$("#"+i).value="");
   f.prio.clear(); f.dem=f.cont=f.hide=false;
   document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));
-  render();
+  window.__lim=60; render();
 };
 
 function norm(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
@@ -381,6 +382,7 @@ function card(l){
       <summary>Detalhes e anotações</summary>
       <dl class="kv">
         ${row("Segmento",esc(l.seg))}
+        ${row("CNPJ",esc(l.cnpj))}
         ${row("Indício de demanda",esc(l.indicio))}
         ${row("Endereço",esc([l.end,l.bairro].filter(Boolean).join(" · ")))}
         ${row("Telefone",esc(l.tel))}
@@ -400,13 +402,15 @@ function card(l){
 
 function render(){
   const r = filtered();
-  $("#count").textContent = `${r.length} de ${LEADS.length} leads`;
-  $("#list").innerHTML = r.length ? r.map(card).join("") : `<div class="empty">Nenhum lead com esses filtros.</div>`;
+  const lim=window.__lim||60;
+  $("#count").textContent = `${r.length} de ${LEADS.length} leads`+(r.length>lim?` (mostrando ${lim})`:"");
+  $("#list").innerHTML = r.length ? r.slice(0,lim).map(card).join("")+(r.length>lim?`<button class="btn" id="btnMore" type="button" style="justify-content:center">Mostrar mais ${Math.min(60,r.length-lim)}</button>`:"") : `<div class="empty">Nenhum lead com esses filtros.</div>`;
   renderStats();
 }
 
 // eventos da lista
 $("#list").addEventListener("click",e=>{
+  if(e.target.id==="btnMore"){ window.__lim=(window.__lim||60)+60; render(); return; }
   const d=e.target.closest("[data-act=del]");
   if(d){
     const id=d.closest(".lead").dataset.id;
@@ -484,7 +488,7 @@ $("#btnCsv").onclick=()=>{
     return [l.id,l.nome,l.cat,l.cidade,l.prio,l.pts,l.tel,l.wa,l.email,l.resp,s.status,s.data,s.nota].map(q).join(";");}));
   download("prospeccao_jp_aluminios.csv","﻿"+lines.join("\n"),"text/csv;charset=utf-8");
 };
-$("#btnBackup").onclick=()=>download("backup_prospeccao_jp.json",JSON.stringify({v:2,state,extra},null,2),"application/json");
+$("#btnBackup").onclick=()=>download("backup_prospeccao_jp.json",JSON.stringify({v:2,state:pruned(),extra},null,2),"application/json");
 $("#btnRestore").onclick=()=>$("#fileRestore").click();
 $("#fileRestore").onchange=async e=>{
   const file=e.target.files[0]; if(!file) return;
@@ -500,10 +504,10 @@ $("#btnTheme").onclick=()=>{
 
 // ---- leads novos (importar e adicionar) ----
 const KEY2="jp_prospeccao_extra_v1";
-let extra=[];
+let extra=[]; let LOTE=[];
 try{ extra=JSON.parse(localStorage.getItem(KEY2)||"[]")||[]; }catch(e){ extra=[]; }
 function saveExtra(){ try{ localStorage.setItem(KEY2,JSON.stringify(extra)); }catch(e){} }
-const DEF={id:"",nome:"",cat:"Novo lead",seg:"",cidade:"Não informada",dist:"",bairro:"",end:"",tel:"",wa:"",email:"",site:"",insta:"",resp:"",cargo:"",fonte:"",indicio:"",servico:"Vidros e esquadrias de alumínio",justif:"",recorr:"",prio:"B",pts:"",conf:"",prox:"",obs:"",dem:false};
+const DEF={cnpj:"",id:"",nome:"",cat:"Novo lead",seg:"",cidade:"Não informada",dist:"",bairro:"",end:"",tel:"",wa:"",email:"",site:"",insta:"",resp:"",cargo:"",fonte:"",indicio:"",servico:"Vidros e esquadrias de alumínio",justif:"",recorr:"",prio:"B",pts:"",conf:"",prox:"",obs:"",dem:false};
 function populate(){
   const keep={c:$("#fCat").value,y:$("#fCity").value,s:$("#fStatus").value};
   const cats=[...new Set(LEADS.map(l=>l.cat))].filter(Boolean).sort();
@@ -516,7 +520,7 @@ function populate(){
   if(!cats.includes("Novo lead")) $("#fAddCat").innerHTML+=`<option>Novo lead</option>`;
 }
 function rebuild(){
-  LEADS=BASE.concat(extra.map(l=>Object.assign({},DEF,l,{custom:true})));
+  LEADS=BASE.concat(LOTE,extra.map(l=>Object.assign({},DEF,l,{custom:true})));
   populate();
 }
 const ALIAS={
@@ -538,7 +542,12 @@ const ALIAS={
   indicio:["indicio de demanda atual","indicio de demanda"],
   servico:["servico que pode ser oferecido","servico"],
   justif:["justificativa para abordagem","justificativa"],
-  obs:["observacoes","observacao","obs"]
+  obs:["observacoes","observacao","obs"],
+  id:["id"],
+  cnpj:["cnpj"],
+  fonte:["link da fonte","fonte"],
+  conf:["grau de confianca dos dados","confianca"],
+  dist:["distancia aprox. de rp (km)","distancia"]
 };
 function mapRow(obj){
   const n={}; for(const k in obj){ n[norm(k).trim()]=obj[k]; }
@@ -589,13 +598,16 @@ function addLeads(recs){
   let add=0,dup=0,skip=0;
   const key=s=>norm(s).replace(/\s+/g," ").trim();
   const names=new Set(LEADS.map(l=>key(l.nome)));
+  const cnpjs=new Set(LEADS.map(l=>String(l.cnpj||"").replace(/\D/g,"")).filter(Boolean));
   const phones=new Set();
   LEADS.forEach(l=>[l.tel,l.wa].forEach(x=>{ const p=firstPhone(x); if(p) phones.add(p.digits); }));
   recs.forEach((r,i)=>{
     if(!r.nome){ skip++; return; }
     const nk=key(r.nome);
     const ph=[firstPhone(r.wa),firstPhone(r.tel)].filter(Boolean).map(p=>p.digits);
-    if(names.has(nk)||ph.some(d=>phones.has(d))){ dup++; return; }
+    const cd=String(r.cnpj||"").replace(/\D/g,"");
+    if(names.has(nk)||ph.some(d=>phones.has(d))||(cd&&cnpjs.has(cd))){ dup++; return; }
+    if(cd) cnpjs.add(cd);
     const l=Object.assign({},r);
     l.id="N"+Date.now().toString(36)+i;
     l.prio=(String(l.prio||"B").trim()[0]||"B").toUpperCase();
@@ -639,7 +651,20 @@ $("#fAdd").addEventListener("submit",e=>{
   if(r.add){ e.target.reset(); toast("Lead adicionado"); }
 });
 rebuild();
+async function loadLotes(){
+  try{
+    const idx=await (await fetch("lotes/index.json",{cache:"no-cache"})).json();
+    const all=[];
+    for(const f of idx.lotes){
+      const txt=await (await fetch("lotes/"+f,{cache:"no-cache"})).text();
+      parseCSV(txt).forEach(o=>{ const r=mapRow(o); if(r.nome){ r.id=r.id||("S"+f+all.length); all.push(Object.assign({},DEF,r)); } });
+    }
+    LOTE=all; rebuild(); render();
+    if(all.length) toast(all.length+" leads de lotes carregados");
+  }catch(e){}
+}
 render();
+loadLotes();
 </script>
 </body>
 </html>
